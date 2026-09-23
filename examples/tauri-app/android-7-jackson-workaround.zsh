@@ -22,10 +22,10 @@ set -eu
 gradle=${0:A:h}/src-tauri/gen/android/app/build.gradle.kts
 marker='// webview-guard example: android-7-jackson-workaround'
 if grep -qF "$marker" "$gradle"; then
-  echo "already applied: $gradle"
-  exit 0
+	echo "already applied: $gradle"
+	exit 0
 fi
-cat >> "$gradle" <<GRADLE
+cat >>"$gradle" <<GRADLE
 
 $marker (see upstream.json, tauri-apps/tauri#8788)
 android {
