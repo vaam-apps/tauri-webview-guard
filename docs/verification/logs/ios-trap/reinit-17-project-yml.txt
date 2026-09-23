@@ -1,0 +1,3 @@
+  deploymentTarget:
+    iOS: 16.4
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;

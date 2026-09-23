@@ -1,0 +1,3 @@
+    mFocusedApp=Token{fea019 ActivityRecord{df4c360 u0 app.vaam.webviewguard.example/.MainActivity t85}}
+  mCurrentFocus=Window{ea4ed45 u0 app.vaam.webviewguard.example/app.vaam.webviewguard.example.MainActivity}
+  mFocusedApp=AppWindowToken{a6ccabf token=Token{fea019 ActivityRecord{df4c360 u0 app.vaam.webviewguard.example/.MainActivity t85}}}

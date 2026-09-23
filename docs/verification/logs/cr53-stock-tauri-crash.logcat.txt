@@ -1,0 +1,4 @@
+09-23 23:13:47.773 I/WebviewGuardExample(11039): tauri_webview_guard_example_lib: example: registering the guard with min_chromium=111
+09-23 23:13:47.776 E/AndroidRuntime(11039): FATAL EXCEPTION: main
+09-23 23:13:47.776 E/AndroidRuntime(11039): java.lang.NoClassDefFoundError: Failed resolution of: Ljava/lang/BootstrapMethodError;
+09-23 23:13:47.776 E/AndroidRuntime(11039): Caused by: java.lang.ClassNotFoundException: Didn't find class "java.lang.BootstrapMethodError" on path: DexPathList[[zip file "/data/app/app.vaam.webviewguard.example-2/base.apk"],nativeLibraryDirectories=[/data/app/app.vaam.webviewguard.example-2/lib/arm64, /data/app/app.vaam.webviewguard.example-2/base.apk!/lib/arm64-v8a, /system/lib64, /vendor/lib64]]

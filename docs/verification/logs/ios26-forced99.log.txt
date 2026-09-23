@@ -1,0 +1,11 @@
+[WebviewGuard] t=1254249.266 constructed
+[WebviewGuard] t=1254249.267 engine: osVersion=26.5.0
+[WebviewGuard] t=1254249.273 block: recorded
+[WebviewGuard] t=1254249.418 load: webview created, blocked=true, url=tauri://localhost
+[WebviewGuard] t=1254249.418 neutralized: webview stopped, blanked and hidden
+[WebviewGuard] t=1254249.426 alert presented after 0 wait(s)
+example: page load finished: about:blank (main)
+example: page load started: about:blank (main)
+example: registering the guard with min_chromium=111 min_ios=99.0
+webview-guard: Webkit 26.5.0 is below the floor 99.0; blocking the WebView
+webview-guard: refused navigation to tauri://localhost

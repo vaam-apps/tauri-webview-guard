@@ -1,0 +1,5 @@
+09-23 23:36:56.888 I/ActivityTaskManager(  507): START u0 {act=android.intent.action.VIEW dat=market://details/... flg=0x10000000} from uid 10175
+09-23 23:36:56.892 I/WebviewGuard(21444): no handler for market://details?id=com.google.android.webview
+09-23 23:36:56.897 I/ActivityTaskManager(  507): START u0 {act=android.intent.action.VIEW dat=https://play.google.com/... flg=0x10000000 cmp=com.android.chrome/com.google.android.apps.chrome.IntentDispatcher} from uid 10175
+09-23 23:36:57.075 I/WebviewGuard(21444): t=7621660 thread=main update tapped: opened=web
+09-23 23:36:59.258 I/ActivityTaskManager(  507): START u0 {cmp=com.android.chrome/org.chromium.chrome.browser.firstrun.FirstRunActivity (has extras)} from uid 10138

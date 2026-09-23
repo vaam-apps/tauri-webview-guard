@@ -1,0 +1,18 @@
+09-23 23:35:28.617 I/WebviewGuardExample(21444): tauri_webview_guard_example_lib: example: registering the guard with min_chromium=111 min_ios=16.4
+09-23 23:35:29.751 I/WebviewGuard(21444): t=7534336 thread=main constructed
+09-23 23:35:29.762 V/Tauri/Plugin(21444): Tauri plugin: pluginId: webview-guard, command: engine
+09-23 23:35:30.035 I/WebviewGuard(21444): t=7534619 thread=main engine: package=com.google.android.webview versionName=109.0.5414.123 label=Android System WebView sdk=33
+09-23 23:35:30.036 W/WebviewGuardExample(21444): tauri_plugin_webview_guard::mobile: webview-guard: Chromium 109.0.5414.123 is below the floor 111; blocking the WebView
+09-23 23:35:30.040 V/Tauri/Plugin(21444): Tauri plugin: pluginId: webview-guard, command: block
+09-23 23:35:30.382 I/WebviewGuard(21444): t=7534966 thread=main block: webViewAlreadyCreated=false
+09-23 23:35:31.349 I/WebviewGuard(21444): t=7535934 thread=main dialog shown
+09-23 23:35:33.055 I/WebviewGuard(21444): t=7537640 thread=main load: webview created, blocked=true, pendingUrl=null
+09-23 23:35:33.114 I/WebviewGuard(21444): t=7537699 thread=main neutralized: js off, hidden, stopped, url=about:blank
+09-23 23:35:34.193 I/WebviewGuardExample(21444): tauri_plugin_webview_guard: webview-guard: refused navigation to http://tauri.localhost/
+09-23 23:35:34.248 I/WebviewGuard(21444): t=7538832 thread=main neutralized: js off, hidden, stopped, url=about:blank
+09-23 23:35:37.528 I/WebviewGuardExample(21444): tauri_webview_guard_example_lib: example: page load started: about:blank (main)
+09-23 23:35:37.969 I/WebviewGuardExample(21444): tauri_webview_guard_example_lib: example: page load finished: about:blank (main)
+09-23 23:35:37.970 I/WebviewGuardExample(21444): tauri_webview_guard_example_lib: example: page load started: about:blank (main)
+09-23 23:35:37.972 I/WebviewGuardExample(21444): tauri_webview_guard_example_lib: example: page load finished: about:blank (main)
+09-23 23:35:40.690 E/TraceManager( 1717): Caused by: com.google.apps.tiktok.tracing.aa
+09-23 23:35:41.408 E/TraceManager( 1717): Caused by: com.google.apps.tiktok.tracing.aa

@@ -1,0 +1,3 @@
+  mCurrentFocus=Window{7de98de u0 store.vaam.spike/store.vaam.spike.MainActivity}
+0
+process: none

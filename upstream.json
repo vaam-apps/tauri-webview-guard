@@ -1,0 +1,88 @@
+{
+  "$comment": "Every pin, workaround and upstream-behaviour dependency this repository carries, in a form a scheduled check can poll: for each entry with an `upstream.api`, GET it and compare `state` (and, for crates, `max_stable_version`) against `state_when_recorded`. When it moves, do what `recheck` says. Recorded 2026-09-23.",
+  "entries": [
+    {
+      "id": "tauri-specta-rc",
+      "kind": "pin",
+      "what": "tauri-specta = \"=2.0.0-rc.25\" (Cargo.toml), with specta = \"=2.0.0-rc.25\" and, for tests/bindings.rs, specta-typescript = \"=0.0.12\".",
+      "why": "The house plugin standard requires tauri-specta for end-to-end types. It has never had a stable 2.0 release; its own crate docs tell users to pin with `=` during the rc period because the generated bindings change shape between rcs. The owner accepts the rc deliberately.",
+      "upstream": {
+        "url": "https://crates.io/crates/tauri-specta",
+        "api": "https://crates.io/api/v1/crates/tauri-specta",
+        "field": "crate.max_stable_version"
+      },
+      "state_when_recorded": {
+        "max_version": "2.0.0-rc.25",
+        "max_stable_version": null
+      },
+      "waiting_on": "A stable tauri-specta 2.0.0 (and the matching stable specta 2.0.0).",
+      "recheck": "When max_stable_version is non-null: move all three pins to the stable versions, run `UPDATE_BINDINGS=1 cargo test --test bindings`, review the diff of guest-js/bindings.ts, and update the README's tauri-specta section."
+    },
+    {
+      "id": "tauri-android-jackson-api24",
+      "kind": "upstream-defect",
+      "what": "Stock Tauri crashes in TauriActivity.onCreate on Android 7.x (API 24/25) with NoClassDefFoundError: java.lang.BootstrapMethodError, from jackson-databind 2.15.3's static initialiser — before any plugin, this guard included, is constructed. Measured on tauri 2.11.6 on the spike_api24_webview emulator: docs/verification/logs/cr53-stock-tauri-crash.logcat.txt.",
+      "workaround": "examples/tauri-app/android-7-jackson-workaround.zsh forces jackson-databind 2.12.7.1 and enables core library desugaring in the example's generated Gradle project, as reported working in the issue. The plugin itself does NOT impose this on consumers; the README tells apps to either raise minSdk to 26 or apply it themselves.",
+      "upstream": {
+        "url": "https://github.com/tauri-apps/tauri/issues/8788",
+        "api": "https://api.github.com/repos/tauri-apps/tauri/issues/8788",
+        "field": "state"
+      },
+      "state_when_recorded": {
+        "state": "open",
+        "updated_at": "2026-07-17T14:15:55Z"
+      },
+      "waiting_on": "Tauri downgrading or dropping jackson-databind in tauri-android (crates/tauri/mobile/android/build.gradle.kts), or declaring API 26 its real minimum.",
+      "recheck": "When the issue closes: check the jackson-databind version in the tauri crate's mobile/android/build.gradle.kts for the new Tauri release; run the example WITHOUT the workaround on an API 24 image; if it starts, delete the workaround script and the README paragraph."
+    },
+    {
+      "id": "tauri-ipc-script-es2018",
+      "kind": "upstream-behaviour",
+      "what": "Tauri's injected IPC script uses object spread (`...options`, scripts/ipc-protocol.js line 77 in tauri 2.11.6), a Chromium 60 feature. On Chromium 53 it fails to parse, so window.__TAURI_INTERNALS__.postMessage is never defined and every invoke() rejects with `TypeError: window.__TAURI_INTERNALS__.postMessage is not a function`. Measured: docs/verification/screenshots/cr53-diag.png.",
+      "why_it_matters_here": "It is the premise for the dialog being native: an HTML fallback whose button calls invoke() is dead on exactly the engines it is for. The native dialog has no dependency on the IPC.",
+      "upstream": {
+        "url": "https://github.com/tauri-apps/tauri/issues/8788",
+        "api": "https://api.github.com/repos/tauri-apps/tauri/issues/8788",
+        "field": "state"
+      },
+      "state_when_recorded": {
+        "state": "open",
+        "note": "Raised in a 2026-07-17 comment on the same issue, not as its own issue."
+      },
+      "waiting_on": "Nothing — this plugin does not depend on it being fixed.",
+      "recheck": "Informational. If Tauri ever ships an ES5 IPC script, the native dialog stays: it is strictly more robust."
+    },
+    {
+      "id": "wry-android-loadurl-posted",
+      "kind": "upstream-behaviour",
+      "what": "wry's Android loadUrlMainThread posts the app's first loadUrl to the main looper (wry 0.55.1 src/android/kotlin/RustWebView.kt), so it runs AFTER the plugin's load(webView) hook. Blanking the WebView inside load() alone is overtaken by that posted load — measured in the first version of this plugin.",
+      "upstream": {
+        "url": "https://github.com/tauri-apps/wry/blob/wry-v0.55.1/src/android/kotlin/RustWebView.kt",
+        "api": null,
+        "field": null
+      },
+      "state_when_recorded": {
+        "wry": "0.55.1"
+      },
+      "waiting_on": "Nothing. The plugin blocks through Tauri's on_navigation hook, and re-neutralizes behind the posted load.",
+      "recheck": "On a wry bump: re-run docs/verification on the Chromium 109 arm and confirm the log still shows `refused navigation to http://tauri.localhost/` and no `page load started: http://tauri.localhost/`."
+    },
+    {
+      "id": "tauri-ios-project-yml-once",
+      "kind": "upstream-behaviour",
+      "what": "`tauri ios init` writes project.yml only if it does not exist (tauri-v2.11.6 crates/tauri-cli/src/mobile/ios/project.rs, the `if !path.exists()` in the template generator), so changing bundle.iOS.minimumSystemVersion after the first init never reaches IPHONEOS_DEPLOYMENT_TARGET. bundle.iOS.template is rendered with File::create on every init and does. The template path is resolved against the CLI's working directory, not src-tauri/. Tauri 2.11.6's default is 14.0 (tauri-utils ios_minimum_system_version); the dev branch says 15.0. All three measured: docs/verification/logs/ios-trap/.",
+      "upstream": {
+        "url": "https://github.com/tauri-apps/tauri/blob/tauri-v2.11.6/crates/tauri-cli/src/mobile/ios/project.rs",
+        "api": null,
+        "field": null
+      },
+      "state_when_recorded": {
+        "tauri": "2.11.6",
+        "default_ios_minimum": "14.0",
+        "dev_branch_default_ios_minimum": "15.0"
+      },
+      "waiting_on": "Nothing.",
+      "recheck": "On a Tauri bump: re-copy crates/tauri-cli/templates/mobile/ios/project.yml at the new tag into examples/tauri-app/src-tauri/ios-project.yml, and re-run the three-step ios-trap check."
+    }
+  ]
+}

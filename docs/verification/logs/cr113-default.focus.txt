@@ -1,0 +1,2 @@
+  mCurrentFocus=Window{472b419 u0 app.vaam.webviewguard.example/app.vaam.webviewguard.example.MainActivity}
+  mFocusedApp=ActivityRecord{82f552c u0 app.vaam.webviewguard.example/.MainActivity t101}
