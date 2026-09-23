@@ -24,8 +24,9 @@ export type EngineKind =
  *  What the guard found at boot, and what it decided.
  * 
  *  Computed once, during plugin setup — before the first WebView exists — and
- *  never recomputed: a WebView provider update on Android kills the app's
- *  process, so a running process always has the engine it booted with.
+ *  never recomputed. A process keeps the WebView implementation it loaded, so
+ *  a provider updated mid-session does not change what this process renders
+ *  with; the next launch re-probes.
  */
 export type GuardStatus = {
 	/**  Which platform this is. */

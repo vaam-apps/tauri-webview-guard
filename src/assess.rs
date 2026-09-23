@@ -233,6 +233,17 @@ mod tests {
     }
 
     #[test]
+    fn ios_unknown_never_blocks() {
+        let (status, block) = assess_ios(
+            &Floor::default(),
+            &IosCopy::default(),
+            &IosEngineReport { os_version: None },
+        );
+        assert_eq!(status.verdict, Verdict::Unknown);
+        assert!(block.is_none());
+    }
+
+    #[test]
     fn ios_uses_the_configured_floor() {
         let floor = Floor {
             min_ios: OsVersion::new(99, 0, 0),
