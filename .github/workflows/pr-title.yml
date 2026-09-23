@@ -6,8 +6,8 @@ name: pr-title
 # the subject of the one commit that lands on `main`, and that subject is
 # the ONLY thing `release-please.yml` reads to decide whether there is a
 # release to propose and whether it is a patch, a minor or a major. A title
-# of "Fix the ASN.1 codec" is invisible to it; "fix: correct ASN.1 length
-# encoding" is a patch.
+# of "Fix the version parser" is invisible to it; "fix: accept a bare major
+# version" is a patch.
 #
 # This is deliberately a separate workflow rather than a job in `quality.yml`.
 # A PR title is changed by editing it, which raises `edited` and not
@@ -71,9 +71,9 @@ jobs:
             echo "then \`: \` and a subject. For example:"
             echo
             echo '```'
-            echo "fix: correct DER-to-P1363 conversion for a leading-zero r"
-            echo "feat(android): support StrongBox key attestation"
-            echo "refactor(ios)!: the plugin class moves to Sources/SignKeypair"
+            echo "fix: treat an unparseable provider version as unknown"
+            echo "feat(android): name the Trichrome provider in the dialog"
+            echo "refactor(ios)!: the alert copy moves to IosCopy"
             echo '```'
             echo
             echo "This repository squash-merges, so this title is the commit"
