@@ -3,9 +3,9 @@
 Refuses to boot a Tauri v2 app into a WebView engine below its CSS floor, and
 tells the user — in a **native** dialog — how to fix it.
 
-| | |
-|---|---|
-| Android, Chromium 109 | Android, Chromium 113 |
+|                                                                                        |                                                                             |
+| -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| Android, Chromium 109                                                                  | Android, Chromium 113                                                       |
 | ![The guard's dialog on Chromium 109](docs/verification/screenshots/cr109-default.png) | ![The app on Chromium 113](docs/verification/screenshots/cr113-default.png) |
 
 Both screenshots are the same APK, two Chromium majors either side of the
@@ -24,7 +24,7 @@ worse:
 - **Chromium 99–110** lays out perfectly and gets every derived colour wrong.
   Each `color-mix(in oklab, var(--x) 30%, transparent)` is invalid, so the token
   falls back to full strength: a 30 %-opacity skeleton becomes a near-white
-  blob, a subtle border becomes a hard line. The app looks *subtly wrong*, and
+  blob, a subtle border becomes a hard line. The app looks _subtly wrong_, and
   the report reads as a bug, not as an old engine.
 - **Below Chromium 99** there are no cascade layers, and Tailwind v4 emits its
   entire stylesheet inside `@layer`. A parser that does not know the at-rule
@@ -63,12 +63,12 @@ sequence, with the Tauri and wry source lines behind each step.
 
 ## Platform support
 
-| Platform | What it checks | Below the floor | `status()` | `openUpdate()` |
-|---|---|---|---|---|
-| **Android** | The WebView provider's `versionName` via `WebViewCompat.getCurrentWebViewPackage` — whichever package actually provides it, never assumed | Refuses the app's navigation, turns JS off, hides the WebView, shows an `AlertDialog` naming the provider, with **Open Play Store** and **Close app** | ✅ | ✅ `market://details?id=<provider>`, falling back to `https://play.google.com/store/apps/details?id=<provider>` |
-| **iOS** | `ProcessInfo.operatingSystemVersion` (WKWebView is the OS's) | Refuses the navigation, hides the WebView, shows a `UIAlertController` saying **update iOS** — no buttons | ✅ | ❌ `Unsupported` — WKWebView has no store listing |
-| **macOS / Windows / Linux** | Nothing | Nothing — logs a warning at setup | ❌ `Unsupported` | ❌ `Unsupported` |
-| **Browser** (no Tauri) | The ES5 [floor probe](#the-browser-build-the-floor-probe), if you inline it | Replaces `<body>` with your template | — | — |
+| Platform                    | What it checks                                                                                                                            | Below the floor                                                                                                                                       | `status()`       | `openUpdate()`                                                                                                  |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- | --------------------------------------------------------------------------------------------------------------- |
+| **Android**                 | The WebView provider's `versionName` via `WebViewCompat.getCurrentWebViewPackage` — whichever package actually provides it, never assumed | Refuses the app's navigation, turns JS off, hides the WebView, shows an `AlertDialog` naming the provider, with **Open Play Store** and **Close app** | ✅               | ✅ `market://details?id=<provider>`, falling back to `https://play.google.com/store/apps/details?id=<provider>` |
+| **iOS**                     | `ProcessInfo.operatingSystemVersion` (WKWebView is the OS's)                                                                              | Refuses the navigation, hides the WebView, shows a `UIAlertController` saying **update iOS** — no buttons                                             | ✅               | ❌ `Unsupported` — WKWebView has no store listing                                                               |
+| **macOS / Windows / Linux** | Nothing                                                                                                                                   | Nothing — logs a warning at setup                                                                                                                     | ❌ `Unsupported` | ❌ `Unsupported`                                                                                                |
+| **Browser** (no Tauri)      | The ES5 [floor probe](#the-browser-build-the-floor-probe), if you inline it                                                               | Replaces `<body>` with your template                                                                                                                  | —                | —                                                                                                               |
 
 Desktop is compiled so `tauri dev` runs, and refuses every call with a typed
 error rather than returning a verdict nobody computed. The desktop engines
@@ -130,13 +130,13 @@ that denies both commands leaves it fully in force.
 
 ## Builder options
 
-| Option | Default | Meaning |
-|---|---|---|
-| `.min_chromium(u32)` | `111` | Minimum Chromium **major**, Android. Inclusive: `111` lets 111 through and blocks 110. Compared against the major of the provider's `versionName`. |
-| `.min_ios(impl Into<String>)` | `"16.4"` | Minimum iOS version, `major.minor` or `major.minor.patch`. Inclusive. Parsed strictly when `.build()` runs — `"16.4-beta"` is refused. |
-| `.android_copy(AndroidCopy)` | English, below | The Android dialog's title, message and two button labels. |
-| `.ios_copy(IosCopy)` | English, below | The iOS alert's title and message. |
-| `.build()` | — | The plugin. **Panics** if `min_ios` does not parse — a constant in your source, wrong on every launch, so it fails the first `tauri dev`. `Builder::floor()` validates without building. |
+| Option                        | Default        | Meaning                                                                                                                                                                                  |
+| ----------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.min_chromium(u32)`          | `111`          | Minimum Chromium **major**, Android. Inclusive: `111` lets 111 through and blocks 110. Compared against the major of the provider's `versionName`.                                       |
+| `.min_ios(impl Into<String>)` | `"16.4"`       | Minimum iOS version, `major.minor` or `major.minor.patch`. Inclusive. Parsed strictly when `.build()` runs — `"16.4-beta"` is refused.                                                   |
+| `.android_copy(AndroidCopy)`  | English, below | The Android dialog's title, message and two button labels.                                                                                                                               |
+| `.ios_copy(IosCopy)`          | English, below | The iOS alert's title and message.                                                                                                                                                       |
+| `.build()`                    | —              | The plugin. **Panics** if `min_ios` does not parse — a constant in your source, wrong on every launch, so it fails the first `tauri dev`. `Builder::floor()` validates without building. |
 
 `tauri_plugin_webview_guard::init()` is `Builder::new().build()`.
 
@@ -149,11 +149,11 @@ app" sends them to a listing with nothing to install.
 Three placeholders are substituted in Rust, once, before the text reaches the
 native side:
 
-| Placeholder | Android | iOS |
-|---|---|---|
-| `{component}` | The provider's own label, as `PackageManager` reports it — "Android System WebView", "Chrome", an OEM name | `iOS` |
-| `{installed}` | The provider's `versionName`, e.g. `109.0.5414.123` | e.g. `16.3.1` |
-| `{required}` | The configured Chromium major, e.g. `111` | e.g. `16.4` |
+| Placeholder   | Android                                                                                                    | iOS           |
+| ------------- | ---------------------------------------------------------------------------------------------------------- | ------------- |
+| `{component}` | The provider's own label, as `PackageManager` reports it — "Android System WebView", "Chrome", an OEM name | `iOS`         |
+| `{installed}` | The provider's `versionName`, e.g. `109.0.5414.123`                                                        | e.g. `16.3.1` |
+| `{required}`  | The configured Chromium major, e.g. `111`                                                                  | e.g. `16.4`   |
 
 Defaults:
 
@@ -247,15 +247,16 @@ renders with `File::create` — every time:
   "bundle": {
     "iOS": {
       "minimumSystemVersion": "16.4",
-      "template": "src-tauri/ios-project.yml"
+      "template": "src-tauri/ios-project.yml.hbs"
     }
   }
 }
 ```
 
-with `ios-project.yml` a copy of Tauri's own template for your Tauri version
-(the example carries 2.11.6's verbatim:
-[`examples/tauri-app/src-tauri/ios-project.yml`](examples/tauri-app/src-tauri/ios-project.yml)).
+with `ios-project.yml.hbs` a copy of Tauri's own template for your Tauri version
+(a Handlebars template, not YAML until rendered — hence the `.hbs`, which also
+keeps YAML linters off it; the example carries 2.11.6's verbatim:
+[`examples/tauri-app/src-tauri/ios-project.yml.hbs`](examples/tauri-app/src-tauri/ios-project.yml.hbs)).
 Then re-run `tauri ios init` after every change to the key, and check:
 
 ```bash
@@ -297,11 +298,13 @@ tauri-specta and committed, so the JS package builds without a Rust toolchain.
 `UPDATE_BINDINGS=1 cargo test --test bindings` rewrites it.
 
 ```ts
-import { commands } from 'tauri-plugin-webview-guard-api'
+import { commands } from "tauri-plugin-webview-guard-api";
 
-const r = await commands.status()
-if (r.status === 'ok') console.log(r.data.verdict, r.data.installed)
-else if (r.error.kind === 'unsupported') { /* desktop, or openUpdate on iOS */ }
+const r = await commands.status();
+if (r.status === "ok") console.log(r.data.verdict, r.data.installed);
+else if (r.error.kind === "unsupported") {
+  /* desktop, or openUpdate on iOS */
+}
 ```
 
 ### The error type
@@ -309,11 +312,11 @@ else if (r.error.kind === 'unsupported') { /* desktop, or openUpdate on iOS */ }
 `WebviewGuardError` (aliased as `tauri_plugin_webview_guard::Error`),
 serialised as a tagged object so a frontend switches on `kind`:
 
-| `kind` | When | Fields |
-|---|---|---|
-| `unsupported` | Every call on desktop; `openUpdate` on iOS; `openUpdate` on an Android device that reported no provider | `platform`, `capability`, `reason` |
-| `no_store_handler` | Android: neither the Play Store nor any browser could open the listing | `package` |
-| `native` | The native side failed in a way it did not classify | `command`, `message` |
+| `kind`             | When                                                                                                    | Fields                             |
+| ------------------ | ------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| `unsupported`      | Every call on desktop; `openUpdate` on iOS; `openUpdate` on an Android device that reported no provider | `platform`, `capability`, `reason` |
+| `no_store_handler` | Android: neither the Play Store nor any browser could open the listing                                  | `package`                          |
+| `native`           | The native side failed in a way it did not classify                                                     | `command`, `message`               |
 
 It is named `WebviewGuardError` rather than `Error` because tauri-specta
 exports a type under its Rust name, and a TypeScript type called `Error`
@@ -352,18 +355,20 @@ It tests the two features the floor is actually made of, not a version string
 It must be inlined, not imported. With Vite:
 
 ```ts
-import { readFileSync } from 'node:fs'
-import { createRequire } from 'node:module'
+import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
 
 const probe = readFileSync(
-  createRequire(import.meta.url).resolve('tauri-plugin-webview-guard-api/probe/floor-probe.js'),
-  'utf8',
-)
+  createRequire(import.meta.url).resolve(
+    "tauri-plugin-webview-guard-api/probe/floor-probe.js",
+  ),
+  "utf8",
+);
 // plugins: [{ name: 'floor-probe', transformIndexHtml: (html) =>
 //   html.replace('<!-- webview-guard:floor-probe -->', () => `<script>${probe}</script>`) }]
 ```
 
-A Vite module script is *not* parked by default, and runs on Chromium 61–110
+A Vite module script is _not_ parked by default, and runs on Chromium 61–110
 anyway — park it, or have your entry return early when
 `document.documentElement.dataset.webviewFloor === 'below'`.
 

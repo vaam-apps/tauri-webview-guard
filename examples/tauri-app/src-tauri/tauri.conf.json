@@ -29,7 +29,7 @@
     ],
     "iOS": {
       "minimumSystemVersion": "16.4",
-      "template": "src-tauri/ios-project.yml"
+      "template": "src-tauri/ios-project.yml.hbs"
     }
   }
 }

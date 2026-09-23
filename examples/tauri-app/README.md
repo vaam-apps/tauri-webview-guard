@@ -34,7 +34,7 @@ Chromium 53 it does not: `docs/verification/README.md`.
 
 ## iOS
 
-`src-tauri/ios-project.yml` is Tauri 2.11.6's own iOS project template,
+`src-tauri/ios-project.yml.hbs` is Tauri 2.11.6's own iOS project template,
 verbatim, set as `bundle.iOS.template` so that `bundle.iOS.minimumSystemVersion`
 (16.4 here) actually reaches the Xcode project on every `tauri ios init` — see
 the root README's iOS section for why that matters.

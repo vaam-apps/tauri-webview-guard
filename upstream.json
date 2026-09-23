@@ -82,7 +82,7 @@
         "dev_branch_default_ios_minimum": "15.0"
       },
       "waiting_on": "Nothing.",
-      "recheck": "On a Tauri bump: re-copy crates/tauri-cli/templates/mobile/ios/project.yml at the new tag into examples/tauri-app/src-tauri/ios-project.yml, and re-run the three-step ios-trap check."
+      "recheck": "On a Tauri bump: re-copy crates/tauri-cli/templates/mobile/ios/project.yml at the new tag into examples/tauri-app/src-tauri/ios-project.yml.hbs, and re-run the three-step ios-trap check."
     }
   ]
 }

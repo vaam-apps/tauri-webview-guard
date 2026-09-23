@@ -9,11 +9,11 @@ and **wry 0.55.1**, so it can be re-checked when either moves
 
 ## The short answer
 
-| | When the native check runs | When the WebView is stopped | What the user sees before the dialog |
-|---|---|---|---|
-| **Android** | Plugin setup, inside `Builder::build`, before any window exists | In `load(webView)`, same main-thread message that created and attached the WebView, before any frame — and again after the app's posted first load, which the Rust navigation hook refuses | The activity's window background (the launch theme). The WebView never paints. |
-| **iOS** | Plugin setup, inside `Builder::build`, before any window exists | `load(webview:)` stops and hides the view (the first load has already been *issued* by then — `webview.url` reads `tauri://localhost`), and Tauri's navigation hook then refuses that navigation when WebKit asks for its policy | A black window (hidden WebView), then the alert. Measured 0.16 s from plugin construction to alert on the iOS 26.5 simulator, with no `page load started` for the app URL. |
-| **Desktop** | Never | Never | Nothing is guarded; every call returns `Unsupported`. |
+|             | When the native check runs                                      | When the WebView is stopped                                                                                                                                                                                                      | What the user sees before the dialog                                                                                                                                       |
+| ----------- | --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Android** | Plugin setup, inside `Builder::build`, before any window exists | In `load(webView)`, same main-thread message that created and attached the WebView, before any frame — and again after the app's posted first load, which the Rust navigation hook refuses                                       | The activity's window background (the launch theme). The WebView never paints.                                                                                             |
+| **iOS**     | Plugin setup, inside `Builder::build`, before any window exists | `load(webview:)` stops and hides the view (the first load has already been _issued_ by then — `webview.url` reads `tauri://localhost`), and Tauri's navigation hook then refuses that navigation when WebKit asks for its policy | A black window (hidden WebView), then the alert. Measured 0.16 s from plugin construction to alert on the iOS 26.5 simulator, with no `page load started` for the app URL. |
+| **Desktop** | Never                                                           | Never                                                                                                                                                                                                                            | Nothing is guarded; every call returns `Unsupported`.                                                                                                                      |
 
 ## Sequence (Android)
 
@@ -50,7 +50,7 @@ sequenceDiagram
 
 The `loadUrlMainThread` step is the one that is easy to get wrong, and the first version of this
 plugin did: `loadUrlMainThread` does not load, it **posts** a load, which runs
-*after* `load(webView)` returns. A guard that only blanked the WebView inside
+_after_ `load(webView)` returns. A guard that only blanked the WebView inside
 `load` watched `about:blank` load and then the app's own
 `http://tauri.localhost/` load straight after it. The fix is the Rust
 `on_navigation` hook, which Tauri consults from `RustWebView.loadUrl` itself.
@@ -136,7 +136,7 @@ Android: the order above is the logcat order on all four emulator arms
 iOS: measured only on an iOS 26.5 simulator with the floor forced to 99.0
 (`verification/logs/ios26-forced99.log.txt`) — no iOS 16.3 runtime is installed
 on the machine this was built on. The order is the unified-log order: WebKit
-asked for the navigation policy *after* `load(webview:)` had already hidden the
+asked for the navigation policy _after_ `load(webview:)` had already hidden the
 view. Whether that ordering holds on a slower device is not proven; the
 navigation hook refuses the load whichever comes first, which is why both
 exist. "No frame of the app was painted" is inferred from the refusal and the
