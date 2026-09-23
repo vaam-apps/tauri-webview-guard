@@ -1,0 +1,16 @@
+"$schema" = "schemas/schema.json"
+
+# Both commands are allowed by default. Neither can change anything a page
+# could not already see or do: `status` reports the engine version (which the
+# user agent string already carries on Android) and the verdict the guard
+# already acted on at boot; `open_update` opens a public store listing.
+#
+# Note that the guard itself needs NO permission. It acts natively during
+# plugin setup, before any page exists, and a capability that denies both of
+# these commands leaves it fully in force.
+[default]
+description = """
+Allows reading the guard's boot-time status and opening the WebView
+provider's store listing.
+"""
+permissions = ["allow-status", "allow-open-update"]

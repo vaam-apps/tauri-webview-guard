@@ -1,0 +1,34 @@
+:root {
+  font-family: system-ui, -apple-system, Roboto, sans-serif;
+  color: #111;
+  background: #fafafa;
+}
+main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+h1 {
+  font-size: 24px;
+  margin: 0 0 8px;
+}
+h2 {
+  font-size: 16px;
+  margin: 24px 0 8px;
+}
+pre {
+  white-space: pre-wrap;
+  word-break: break-all;
+  font-size: 12px;
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 12px;
+  margin: 0;
+}
+.swatch {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  background: #cccccc;
+  background: color-mix(in oklab, #1a73e8 20%, white);
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "webview-guard example",
+  "version": "0.1.0",
+  "identifier": "app.vaam.webviewguard.example",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:5173",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "tauri-plugin-webview-guard",
+        "width": 820,
+        "height": 900
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/icon.png"
+    ],
+    "iOS": {
+      "minimumSystemVersion": "16.4",
+      "template": "src-tauri/ios-project.yml"
+    }
+  }
+}
