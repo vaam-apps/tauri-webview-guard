@@ -1,0 +1,10 @@
+09-23 23:21:27.770 I/WebviewGuardExample(20873): tauri_webview_guard_example_lib: example: registering the guard with min_chromium=1
+09-23 23:21:29.658 I/WebviewGuard(20873): t=6694243 thread=main constructed
+09-23 23:21:29.681 V/Tauri/Plugin(20873): Tauri plugin: pluginId: webview-guard, command: engine
+09-23 23:21:29.842 I/WebviewGuard(20873): t=6694427 thread=main engine: package=com.google.android.webview versionName=109.0.5414.123 label=Android System WebView sdk=33
+09-23 23:21:29.847 I/WebviewGuardExample(20873): tauri_plugin_webview_guard::mobile: webview-guard: Chromium 109.0.5414.123 clears the floor 1
+09-23 23:21:32.101 I/WebviewGuard(20873): t=6696686 thread=main load: webview created, blocked=false, pendingUrl=null
+09-23 23:21:33.421 I/WebviewGuardExample(20873): tauri_webview_guard_example_lib: example: page load started: http://tauri.localhost/ (main)
+09-23 23:21:33.586 I/WebviewGuardExample(20873): tauri_webview_guard_example_lib: example: page load finished: http://tauri.localhost/ (main)
+09-23 23:21:40.449 E/TraceManager( 1717): Caused by: com.google.apps.tiktok.tracing.aa
+09-23 23:21:41.481 E/TraceManager( 1717): Caused by: com.google.apps.tiktok.tracing.aa

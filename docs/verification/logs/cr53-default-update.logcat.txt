@@ -1,0 +1,4 @@
+09-23 23:36:45.406 I/ActivityManager( 1172): START u0 {act=android.intent.action.VIEW dat=market://details?id=com.google.android.webview flg=0x10000000} from uid 10075 on display 0
+09-23 23:36:45.408 I/WebviewGuard(12135): no handler for market://details?id=com.google.android.webview
+09-23 23:36:45.410 I/ActivityManager( 1172): START u0 {act=android.intent.action.VIEW dat=https://play.google.com/... flg=0x10000000 cmp=org.chromium.webview_shell/.WebViewBrowserActivity} from uid 10075 on display 0
+09-23 23:36:45.466 I/WebviewGuard(12135): t=7988299 thread=main update tapped: opened=web

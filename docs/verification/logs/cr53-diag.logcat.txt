@@ -1,0 +1,9 @@
+09-23 23:21:05.611 I/WebviewGuardExample(11762): tauri_webview_guard_example_lib: example: registering the guard with min_chromium=1
+09-23 23:21:05.710 I/WebviewGuard(11762): t=7048543 thread=main constructed
+09-23 23:21:05.715 V/Tauri/Plugin(11762): Tauri plugin: pluginId: webview-guard, command: engine
+09-23 23:21:05.716 I/WebviewGuard(11762): t=7048549 thread=main engine: package=com.google.android.webview versionName=53.0.2785.124 label=Android System WebView sdk=24
+09-23 23:21:05.717 I/WebviewGuardExample(11762): tauri_plugin_webview_guard::mobile: webview-guard: Chromium 53.0.2785.124 clears the floor 1
+09-23 23:21:05.785 I/WebviewGuard(11762): t=7048618 thread=main load: webview created, blocked=false, pendingUrl=null
+09-23 23:21:05.806 I/WebviewGuardExample(11762): tauri_webview_guard_example_lib: example: page load started: http://tauri.localhost/ (main)
+09-23 23:21:05.956 E/Tauri/Console(11762): File: http://tauri.localhost/ - Line 135 - Msg: Uncaught SyntaxError: Unexpected token ...
+09-23 23:21:05.966 I/WebviewGuardExample(11762): tauri_webview_guard_example_lib: example: page load finished: http://tauri.localhost/ (main)

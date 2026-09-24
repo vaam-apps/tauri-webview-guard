@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>webview-guard example</title>
+    <!-- webview-guard:floor-probe -->
+    <link rel="stylesheet" href="/src/style.css" />
+    <script type="module" src="/src/main.ts"></script>
+  </head>
+  <body>
+    <main>
+      <h1>The app booted</h1>
+      <p>
+        If you can read this on a phone, the native guard judged this WebView to be at or above
+        the floor and let it load.
+      </p>
+      <div class="swatch">
+        This panel is <code>color-mix(in oklab, #1a73e8 20%, white)</code>: a pale blue on an
+        engine at or above Chromium 111, the grey fallback below it.
+      </div>
+      <h2>What the page sees</h2>
+      <pre id="diag">(diagnostics pending)</pre>
+      <h2>What the plugin reports</h2>
+      <pre id="status">(waiting for the typed bindings)</pre>
+    </main>
+
+    <!-- Rendered by the floor probe below the floor. Reached only in a browser,
+         or in the example's diagnostic build: in the normal build the native
+         guard never lets a below-floor WebView load this page at all. -->
+    <template id="webview-guard-below-floor">
+      <div style="padding: 24px; font-family: sans-serif; background: #fff3e0; color: #111">
+        <p style="font-size: 20px; font-weight: bold; margin: 0 0 12px">
+          Floor probe: below the floor
+        </p>
+        <p style="margin: 0 0 12px">
+          This engine lacks color-mix() or CSS.registerProperty. The app's bundle was not
+          promoted. Diagnostics:
+        </p>
+        <pre id="diag" style="white-space: pre-wrap; font-size: 12px">(diagnostics pending)</pre>
+      </div>
+    </template>
+
+    <!-- ES5 on purpose, and not part of the bundle: this is what reports on a
+         Chromium 53 WebView, where the module bundle never runs. It waits for
+         DOMContentLoaded so it runs after the probe's own handler, which may
+         have replaced the body with the template above. -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        var lines = []
+        function show() {
+          var el = document.getElementById('diag')
+          if (el) el.textContent = lines.join('\n')
+        }
+        lines.push('userAgent: ' + navigator.userAgent)
+        lines.push('floor probe: ' + JSON.stringify(window.__WEBVIEW_GUARD_FLOOR__))
+        var internals = window.__TAURI_INTERNALS__
+        lines.push('typeof __TAURI_INTERNALS__: ' + typeof internals)
+        if (internals && typeof internals.invoke === 'function') {
+          lines.push(
+            'internals: ' +
+              ['invoke', 'ipc', 'postMessage', 'transformCallback']
+                .map(function (k) {
+                  return k + '=' + typeof internals[k]
+                })
+                .join(' ')
+          )
+          lines.push('ipc: invoking plugin:webview-guard|status ...')
+          var slot = lines.length - 1
+          show()
+          internals.invoke('plugin:webview-guard|status', {}).then(
+            function (s) {
+              lines[slot] = 'ipc: OK ' + JSON.stringify(s)
+              show()
+            },
+            function (e) {
+              lines[slot] = 'ipc: REJECTED ' + String(e)
+              show()
+            }
+          )
+        } else {
+          lines.push('ipc: unavailable — the Tauri IPC script did not define invoke')
+        }
+        show()
+      })
+    </script>
+  </body>
+</html>

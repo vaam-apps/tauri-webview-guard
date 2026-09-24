@@ -1,0 +1,26 @@
+$ cargo fmt --check
+(clean)
+$ cargo clippy --all-targets -- -D warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.44s
+$ cargo test
+     Running unittests src/lib.rs (target/debug/deps/tauri_plugin_webview_guard-0cf838a83b78194d)
+test result: ok. 33 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/bindings.rs (target/debug/deps/bindings-a1a7b8aef82f3d4e)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+   Doc-tests tauri_plugin_webview_guard
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+$ cargo clippy --target aarch64-linux-android -- -D warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.61s
+$ cargo clippy --target aarch64-apple-ios -- -D warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 14.01s
+$ cargo clippy --target x86_64-pc-windows-msvc -- -D warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.40s
+$ npm run typecheck   (tsc --noEmit: no output means no errors)
+
+$ npm test
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+$ npm run build
+created ./dist-js/index.js, ./dist-js/index.cjs in 431ms
+$ ./gradlew :tauri-plugin-webview-guard:testDebugUnitTest   (from examples/tauri-app/src-tauri/gen/android)
+TEST-app.vaam.webviewguard.StoreLinkTest.xml: tests="3" skipped="0" failures="0" errors="0"

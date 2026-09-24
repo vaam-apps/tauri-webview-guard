@@ -1,0 +1,7 @@
+[WebviewGuard] t=1254267.128 constructed
+[WebviewGuard] t=1254267.129 engine: osVersion=26.5.0
+[WebviewGuard] t=1254267.263 load: webview created, blocked=false, url=tauri://localhost
+example: page load finished: tauri://localhost (main)
+example: page load started: tauri://localhost (main)
+example: registering the guard with min_chromium=111 min_ios=16.4
+webview-guard: Webkit 26.5.0 clears the floor 16.4

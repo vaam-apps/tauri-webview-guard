@@ -1,0 +1,178 @@
+# The language suites, and the two platform builds that compile the native
+# halves for real.
+#
+# Split by runner so a failure names what broke. What is NOT here, stated
+# plainly: nothing in CI boots a device. The guard's actual behaviour — the
+# dialog, the refused navigation, the store link — is verified on emulators and
+# a simulator by hand; see docs/verification/. CI proves the four languages
+# compile and their unit tests pass, which is necessary and nowhere near
+# sufficient.
+name: tests
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rust:
+    name: rust
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install the Linux WebView dependencies
+        # `tauri` links against webkit2gtk even for a headless test binary.
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libsoup-3.0-dev \
+            libjavascriptcoregtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+      # Pinned by SHA (zizmor unpinned-uses); the toolchain itself floats on
+      # `stable`, which is the point of this job.
+      - uses: dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de # master, 2026-09-12
+        with:
+          toolchain: stable
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@98c8021b550208e191a6a3145459bfc9fb29c4c0 # v2.8.0
+      - run: cargo fmt --check
+      - run: cargo clippy --all-targets -- -D warnings
+      # Includes tests/bindings.rs, which fails if guest-js/bindings.ts no
+      # longer matches the Rust command signatures.
+      - run: cargo test
+
+  cross-targets:
+    name: clippy the Android and Windows targets
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Pinned by SHA (zizmor unpinned-uses); the toolchain itself floats on
+      # `stable`, which is the point of this job.
+      - uses: dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de # master, 2026-09-12
+        with:
+          toolchain: stable
+          components: clippy
+          targets: x86_64-pc-windows-msvc, aarch64-linux-android
+      - uses: Swatinem/rust-cache@98c8021b550208e191a6a3145459bfc9fb29c4c0 # v2.8.0
+      # `cargo clippy` does not link, so a cross target needs no foreign linker.
+      # The Android target is where src/mobile.rs and the Android half of
+      # src/assess.rs are compiled at all; a desktop-only clippy never sees them.
+      - run: cargo clippy --target aarch64-linux-android -- -D warnings
+      - run: cargo clippy --target x86_64-pc-windows-msvc -- -D warnings
+
+  typescript:
+    name: typescript
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npm run typecheck
+      # The floor probe's suite: an ES5 parse with acorn, then its behaviour
+      # in jsdom with the two CSS APIs stubbed each way.
+      - run: npm test
+      - run: npm run build
+
+  ios:
+    name: ios (Swift compiles in a real Tauri build)
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Pinned by SHA (zizmor unpinned-uses); the toolchain itself floats on
+      # `stable`, which is the point of this job.
+      - uses: dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de # master, 2026-09-12
+        with:
+          toolchain: stable
+          components: clippy
+          targets: aarch64-apple-ios, aarch64-apple-ios-sim
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+      - run: cargo clippy --target aarch64-apple-ios -- -D warnings
+      # The Swift half is only compiled when an app links it, so the only way to
+      # know it builds is to build the example for the simulator. xcodegen is
+      # what `tauri ios init` shells out to.
+      - name: Build the example for the iOS simulator
+        run: |
+          set -euo pipefail
+          brew install xcodegen
+          npm ci && npm run build
+          cd examples/tauri-app
+          npm ci
+          npx tauri ios init --ci
+          npx tauri ios build --debug --target aarch64-sim
+      # The deployment target is the primary iOS defence; assert the example's
+      # bundle.iOS.template actually carried 16.4 into the Xcode project.
+      - name: The deployment target reached the Xcode project
+        working-directory: examples/tauri-app/src-tauri/gen/apple
+        run: |
+          set -euo pipefail
+          grep -m1 'IPHONEOS_DEPLOYMENT_TARGET = 16.4;' ./*.xcodeproj/project.pbxproj
+
+  kotlin:
+    name: kotlin
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+      # Pinned by SHA (zizmor unpinned-uses); the toolchain itself floats on
+      # `stable`, which is the point of this job.
+      - uses: dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de # master, 2026-09-12
+        with:
+          toolchain: stable
+          targets: aarch64-linux-android
+      # No `setup-android` action: the ubuntu runner already ships the SDK at
+      # $ANDROID_HOME. What it does not export is NDK_HOME, which `tauri android
+      # init` needs, so resolve the bundled NDK.
+      - name: Point Tauri at the runner's bundled NDK
+        run: |
+          set -euo pipefail
+          echo "ANDROID_HOME=$ANDROID_HOME" >> "$GITHUB_ENV"
+          ndk=$(find "$ANDROID_HOME/ndk" -maxdepth 1 -mindepth 1 -type d | sort -V | tail -1)
+          test -n "$ndk"
+          echo "NDK_HOME=$ndk" >> "$GITHUB_ENV"
+          echo "using NDK $ndk"
+      # `android/` is a Gradle subproject with no wrapper of its own; the
+      # example's generated project includes it as
+      # `:tauri-plugin-webview-guard` next to Tauri's `:tauri-android`.
+      - name: Generate the host Android project
+        run: |
+          npm ci && npm run build
+          cd examples/tauri-app && npm ci && npx tauri android init --ci
+      # A real build: it compiles the Kotlin against Tauri's Android library,
+      # and it is what writes tauri.settings.gradle. One ABI to keep it short.
+      - name: Android build
+        working-directory: examples/tauri-app
+        run: npx tauri android build --debug --target aarch64 --apk
+      - name: JVM unit tests
+        working-directory: examples/tauri-app/src-tauri/gen/android
+        run: ./gradlew :tauri-plugin-webview-guard:testDebugUnitTest --no-daemon

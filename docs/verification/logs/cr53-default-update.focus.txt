@@ -1,0 +1,3 @@
+    mFocusedApp=Token{8f4838a ActivityRecord{46939f5 u0 org.chromium.webview_shell/.WebViewBrowserActivity t82}}
+  mCurrentFocus=Window{ca41142 u0 org.chromium.webview_shell/org.chromium.webview_shell.WebViewBrowserActivity}
+  mFocusedApp=AppWindowToken{cb6bed7 token=Token{8f4838a ActivityRecord{46939f5 u0 org.chromium.webview_shell/.WebViewBrowserActivity t82}}}

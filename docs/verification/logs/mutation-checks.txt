@@ -1,0 +1,75 @@
+== chromium >= becomes >
+-            Some(major) if major >= self.min_chromium => Verdict::Supported,
++            Some(major) if major > self.min_chromium => Verdict::Supported,
+test floor::tests::chromium_floor_is_configurable ... FAILED
+test floor::tests::chromium_boundary_is_inclusive ... FAILED
+test assess::tests::at_or_above_floor_never_blocks ... FAILED
+test result: FAILED. 29 passed; 3 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   restored
+== chromium floor hardcoded to the default
+-            Some(major) if major >= self.min_chromium => Verdict::Supported,
++            Some(major) if major >= DEFAULT_MIN_CHROMIUM => Verdict::Supported,
+test floor::tests::chromium_floor_is_configurable ... FAILED
+test result: FAILED. 31 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   restored
+== chromium floor hardcoded one below
+-            Some(major) if major >= self.min_chromium => Verdict::Supported,
++            Some(major) if major >= 110 => Verdict::Supported,
+test floor::tests::chromium_boundary_is_inclusive ... FAILED
+test floor::tests::chromium_floor_is_configurable ... FAILED
+test result: FAILED. 30 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   restored
+== ios >= becomes >
+-            Some(Ok(v)) if v >= self.min_ios => Verdict::Supported,
++            Some(Ok(v)) if v > self.min_ios => Verdict::Supported,
+test floor::tests::ios_floor_is_configurable ... FAILED
+test floor::tests::ios_boundary_is_inclusive_and_minor_aware ... FAILED
+test result: FAILED. 30 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   restored
+== ios compares major only
+-            Some(Ok(v)) if v >= self.min_ios => Verdict::Supported,
++            Some(Ok(v)) if v.major >= self.min_ios.major => Verdict::Supported,
+test floor::tests::ios_boundary_is_inclusive_and_minor_aware ... FAILED
+test assess::tests::ios_blocks_below_and_says_update_ios ... FAILED
+test result: FAILED. 30 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   restored
+== navigation lets the app through when blocked
+-    !blocked || url == "about:blank"
++    !blocked || url.starts_with("about:")|| url.contains("localhost")
+test tests::nothing_but_about_blank_navigates_once_blocked ... FAILED
+test result: FAILED. 31 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   restored
+== unknown also blocks (android+ios)
+-    let block = (verdict == Verdict::BelowFloor).then(|| {
++    let block = (verdict != Verdict::Supported).then(|| {
+-    let block = (verdict == Verdict::BelowFloor).then(|| {
++    let block = (verdict != Verdict::Supported).then(|| {
+test assess::tests::unknown_never_blocks ... FAILED
+test result: FAILED. 31 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   restored
+== unknown also blocks (ios only, after adding ios_unknown_never_blocks)
+-    let block = (verdict == Verdict::BelowFloor).then(|| {
++    let block = (verdict != Verdict::Supported).then(|| {
+test assess::tests::ios_unknown_never_blocks ... FAILED
+test result: FAILED. 32 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+== probe: conjunction becomes disjunction
+-  result.supported = result.colorMix && result.registerProperty;
++  result.supported = result.colorMix || result.registerProperty;
+   × floor-probe.js > passes only when color-mix() AND CSS.registerProperty are both present 86ms
+   × floor-probe.js > treats a throwing CSS.supports as below the floor, not as a crash 5ms
+      Tests  2 failed | 6 passed (8)
+== probe: color-mix alone (the Safari 16.2/16.3 hole)
+-  result.supported = result.colorMix && result.registerProperty;
++  result.supported = result.colorMix;
+   × floor-probe.js > passes only when color-mix() AND CSS.registerProperty are both present 92ms
+      Tests  1 failed | 7 passed (8)
+== probe: one ES2015 const
+-  var doc = document;
++  const doc = document;
+   × floor-probe.js > is ES5 — it has to parse on Chromium 53 6ms
+      Tests  1 failed | 7 passed (8)
+== probe: template ignored
+-    if (template) {
++    if (false) {
+   × floor-probe.js > renders the page-supplied template below the floor 8ms
+      Tests  1 failed | 7 passed (8)

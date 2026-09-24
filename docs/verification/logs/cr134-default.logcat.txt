@@ -1,0 +1,8 @@
+09-23 23:36:14.754 I/WebviewGuardExample(19358): tauri_webview_guard_example_lib: example: registering the guard with min_chromium=111 min_ios=16.4
+09-23 23:36:16.038 I/WebviewGuard(19358): t=7541742 thread=main constructed
+09-23 23:36:16.057 V/Tauri/Plugin(19358): Tauri plugin: pluginId: webview-guard, command: engine
+09-23 23:36:16.072 I/WebviewGuard(19358): t=7541776 thread=main engine: package=com.google.android.webview versionName=134.0.6998.135 label=Android System WebView sdk=36
+09-23 23:36:16.127 I/WebviewGuardExample(19358): tauri_plugin_webview_guard::mobile: webview-guard: Chromium 134.0.6998.135 clears the floor 111
+09-23 23:36:19.489 I/WebviewGuard(19358): t=7545193 thread=main load: webview created, blocked=false, pendingUrl=null
+09-23 23:36:22.725 I/WebviewGuardExample(19358): tauri_webview_guard_example_lib: example: page load started: http://tauri.localhost/ (main)
+09-23 23:36:23.604 I/WebviewGuardExample(19358): tauri_webview_guard_example_lib: example: page load finished: http://tauri.localhost/ (main)

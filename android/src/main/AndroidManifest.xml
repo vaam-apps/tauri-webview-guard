@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  No permissions and no <queries> on purpose.
+
+  WebViewCompat.getCurrentWebViewPackage needs neither: the provider's
+  PackageInfo is handed to the app by the WebView factory, not looked up
+  through PackageManager, so Android 11's package-visibility filtering does
+  not apply to it. The store intents are fired with startActivity and an
+  ActivityNotFoundException fallback rather than resolved in advance, which is
+  what would otherwise need a <queries> entry for the market: scheme.
+-->
+<manifest />

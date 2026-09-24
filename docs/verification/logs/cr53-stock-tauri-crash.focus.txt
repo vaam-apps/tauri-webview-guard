@@ -1,0 +1,2 @@
+  mCurrentFocus=Window{e32caa7 u0 Application Error: app.vaam.webviewguard.example}
+  mFocusedApp=AppWindowToken{3b92438 token=Token{dd5e4aa ActivityRecord{59ceb95 u0 store.vaam.spike/.MainActivity t80}}}
