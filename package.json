@@ -1,6 +1,6 @@
 {
   "name": "tauri-plugin-webview-guard-api",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Frontend bindings for tauri-plugin-webview-guard, plus an ES5 floor probe for browser builds.",
   "license": "MIT",
   "repository": {

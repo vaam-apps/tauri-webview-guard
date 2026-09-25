@@ -1,6 +1,6 @@
 [package]
 name = "tauri-plugin-webview-guard"
-version = "0.0.0" # x-release-please-version
+version = "1.0.0" # x-release-please-version
 description = "Refuse to boot a Tauri v2 app into a WebView engine below its CSS floor, and say how to fix it in a native dialog."
 authors = ["Vaam <oss@vaam.app>"]
 license = "MIT"
