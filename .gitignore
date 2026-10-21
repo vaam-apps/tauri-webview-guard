@@ -37,3 +37,7 @@ node_modules/
 /android/build/
 /android/.gradle/
 /android/local.properties
+
+# The VitePress docs site (docs/): build output and cache.
+/docs/.vitepress/dist/
+/docs/.vitepress/cache/
