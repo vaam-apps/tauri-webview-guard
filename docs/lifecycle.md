@@ -38,7 +38,7 @@ sequenceDiagram
         G->>G: blocked = true (src/lib.rs, on_navigation)
     end
     T->>A: App::run → setup → WebviewWindowBuilder::from_config (app.rs:2525)
-    A->>W: new RustWebView; loadUrlMainThread(url) POSTS loadUrl (main_pipe.rs:250, RustWebView.kt:40)
+    A->>W: new RustWebView#59; loadUrlMainThread(url) POSTS loadUrl (main_pipe.rs:250, RustWebView.kt:40)
     A->>W: setContentView(webview) (main_pipe.rs:315)
     A->>K: onWebViewCreated → load(webView) (main_pipe.rs:320, manager/webview.rs:518, PluginManager.kt:150)
     K->>W: JS off, INVISIBLE, stopLoading, about:blank — and post the same again
@@ -92,7 +92,7 @@ sequenceDiagram
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Setup: Builder::build
+    [*] --> Setup: Builder#58;#58;build
     Setup --> Probed: engine reported
     Setup --> Unknown: engine call failed
     Probed --> Supported: version ≥ floor
