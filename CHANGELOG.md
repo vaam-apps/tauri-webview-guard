@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/vaam-apps/tauri-webview-guard/compare/v1.0.0...v1.0.1) (2026-10-21)
+
+
+### Documentation
+
+* add a VitePress site on the vaam-apps Material 3 theme ([#3](https://github.com/vaam-apps/tauri-webview-guard/issues/3)) ([6563e80](https://github.com/vaam-apps/tauri-webview-guard/commit/6563e80152df1df33d52780d0727f4eab63d8bba))
+
 ## 1.0.0 (2026-09-24)
 
 
